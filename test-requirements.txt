@@ -9,6 +9,7 @@ git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_transa
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_transaction_ready_mixin
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_transaction_terminate_mixin
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_transaction_partner_mixin
+git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_accounting_entry_mixin
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_company_currency_mixin
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_res_currency_m2o_configurator_mixin
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_res_partner_m2o_configurator_mixin
