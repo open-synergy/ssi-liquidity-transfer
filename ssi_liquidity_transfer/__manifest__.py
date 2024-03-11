@@ -20,6 +20,7 @@
         "ssi_account_journal_m2o_configurator_mixin",
         "ssi_res_partner_m2o_configurator_mixin",
         "ssi_m2o_configurator_mixin",
+        "ssi_company_currency_mixin",
         "base_automation",
     ],
     "data": [
