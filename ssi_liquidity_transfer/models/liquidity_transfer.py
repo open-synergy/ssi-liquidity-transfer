@@ -187,7 +187,7 @@ class LiquidityTransfer(models.Model):
         for record in self:
             result = 0.0
             for aml in record.reference_move_line_ids:
-                result += -1.0 * aml.amount_currency
+                result += aml.amount_currency
             record.aml_amount = result
 
     @api.depends("type_id")
