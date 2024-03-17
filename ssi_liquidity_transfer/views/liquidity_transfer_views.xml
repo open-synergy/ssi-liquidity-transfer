@@ -83,7 +83,7 @@
                     <field
                             name="reference_move_line_ids"
                             widget="many2many"
-                            domain="[('journal_id','=',journal_id),('liquidity_transfer_id','=',False),('account_id','!=',journal_account_id),('account_id','!=',account_id)]"
+                            domain="[('journal_id','=',journal_id),('liquidity_transfer_id','=',False),('account_id','!=',journal_account_id),('account_id','!=',account_id),('move_id.state','=','posted')]"
                         />
                     <group name="aml_1" colspan="4" col="2" invisible="1">
                         <group name="aml_1_1" colspan="1" col="2">
