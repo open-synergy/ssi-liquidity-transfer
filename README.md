@@ -18,7 +18,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_liquidity_transfer](ssi_liquidity_transfer/) | 14.0.1.2.0 |  | Liquidity Transfer
+[ssi_liquidity_transfer](ssi_liquidity_transfer/) | 14.0.1.3.0 |  | Liquidity Transfer
 
 [//]: # (end addons)
 
