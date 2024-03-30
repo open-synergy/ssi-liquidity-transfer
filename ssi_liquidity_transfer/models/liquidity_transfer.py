@@ -75,7 +75,7 @@ class LiquidityTransfer(models.Model):
 
     # Debit ML Attribute
     _debit_account_id_field_name = "account_id"
-    _debit_partner_id_field_name = False
+    _debit_partner_id_field_name = "custodian_id"
     _debit_analytic_account_id_field_name = False
     _debit_label_field_name = "name"
     _debit_product_id_field_name = False
@@ -92,7 +92,7 @@ class LiquidityTransfer(models.Model):
 
     # Credit ML Attribute
     _credit_account_id_field_name = "account_id"
-    _credit_partner_id_field_name = False
+    _credit_partner_id_field_name = "custodian_id"
     _credit_analytic_account_id_field_name = False
     _credit_label_field_name = "name"
     _credit_product_id_field_name = False
@@ -130,6 +130,17 @@ class LiquidityTransfer(models.Model):
             ],
         },
     )
+    custodian_id = fields.Many2one(
+        string="Custodian",
+        comodel_name="res.partner",
+        readonly=True,
+        ondelete="restrict",
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
     transfer_amount_method = fields.Selection(
         related="type_id.transfer_amount_method",
     )
@@ -143,6 +154,12 @@ class LiquidityTransfer(models.Model):
         string="Allowed Journals",
         comodel_name="account.journal",
         compute="_compute_allowed_journal_ids",
+        store=False,
+    )
+    allowed_partner_ids = fields.Many2many(
+        string="Allowed Partners",
+        comodel_name="res.partner",
+        compute="_compute_allowed_partner_ids",
         store=False,
     )
     reference_move_line_ids = fields.One2many(
@@ -205,6 +222,20 @@ class LiquidityTransfer(models.Model):
             record.allowed_account_ids = result
 
     @api.depends("type_id")
+    def _compute_allowed_partner_ids(self):
+        for record in self:
+            result = False
+            if record.type_id:
+                result = record._m2o_configurator_get_filter(
+                    object_name="res.partner",
+                    method_selection=record.type_id.partner_selection_method,
+                    manual_recordset=record.type_id.partner_ids,
+                    domain=record.type_id.partner_domain,
+                    python_code=record.type_id.partner_python_code,
+                )
+            record.allowed_partner_ids = result
+
+    @api.depends("type_id")
     def _compute_allowed_journal_ids(self):
         for record in self:
             result = False
@@ -255,6 +286,12 @@ class LiquidityTransfer(models.Model):
     )
     def onchange_journal_id(self):
         self.journal_id = False
+
+    @api.onchange(
+        "type_id",
+    )
+    def onchange_custodian_id(self):
+        self.custodian_id = False
 
     @api.model
     def _get_policy_field(self):
