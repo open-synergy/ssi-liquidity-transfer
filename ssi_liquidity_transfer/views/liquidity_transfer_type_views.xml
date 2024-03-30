@@ -40,6 +40,8 @@
             <xpath expr="//page[1]" position="before">
                 <page name="account" string="Account">
                 </page>
+                <page name="custodian" string="Custodian">
+                </page>
             </xpath>
         </data>
     </field>

@@ -35,6 +35,7 @@
         "data/approval_template_data.xml",
         "data/ir_actions_server_data.xml",
         "data/base_automation_data.xml",
+        "data/res_partner_category_data.xml",
         "menu.xml",
         "views/liquidity_transfer_type_views.xml",
         "views/liquidity_transfer_views.xml",

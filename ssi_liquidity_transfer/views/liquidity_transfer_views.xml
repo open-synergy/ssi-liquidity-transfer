@@ -17,6 +17,7 @@
                 <field name="currency_id" />
                 <field name="account_id" />
                 <field name="transfer_amount" />
+                <field name="custodian_id" />
                 <field name="debit_realized" optional="hide" />
                 <field name="credit_realized" optional="hide" />
             </xpath>
@@ -57,11 +58,17 @@
                         widget="many2many_tags"
                         invisible="1"
                     />
+                <field
+                        name="allowed_partner_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
                 <field name="transfer_amount_method" invisible="1" />
                 <field name="journal_id" domain="[('id','in',allowed_journal_ids)]" />
                 <field name="journal_account_id" invisible="1" />
                 <field name="currency_id" invisible="1" />
                 <field name="account_id" domain="[('id','in',allowed_account_ids)]" />
+                <field name="custodian_id" domain="[('id','in',allowed_partner_ids)]" />
             </xpath>
             <xpath expr="//group[@name='header_right']" position="inside">
                 <field name="date" />

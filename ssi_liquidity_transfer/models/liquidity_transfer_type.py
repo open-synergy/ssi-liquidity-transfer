@@ -11,18 +11,24 @@ class LiquiityTransferType(models.Model):
         "mixin.master_data",
         "mixin.account_account_m2o_configurator",
         "mixin.account_journal_m2o_configurator",
+        "mixin.res_partner_m2o_configurator",
     ]
     _description = "Liquidity Transfer Type"
     _account_account_m2o_configurator_insert_form_element_ok = True
     _account_account_m2o_configurator_form_xpath = "//page[@name='account']"
     _account_journal_m2o_configurator_insert_form_element_ok = True
     _account_journal_m2o_configurator_form_xpath = "//page[@name='account']"
+    _res_partner_m2o_configurator_insert_form_element_ok = True
+    _res_partner_m2o_configurator_form_xpath = "//page[@name='custodian']"
 
     account_ids = fields.Many2many(
         relation="rel_liquidity_transfer_type_2_account",
     )
     journal_ids = fields.Many2many(
         relation="rel_liquidity_transfer_type_2_journal",
+    )
+    partner_ids = fields.Many2many(
+        relation="rel_liquidity_transfer_type_2_partner",
     )
     account_id = fields.Many2one(
         string="Default Transfer Account",
