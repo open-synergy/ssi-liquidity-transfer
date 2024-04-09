@@ -19,7 +19,7 @@ class LiquidityTransfer(models.Model):
         "mixin.transaction_account_move_with_field",
         "mixin.account_move_double_line_with_field",
     ]
-    _description = "Payment Request"
+    _description = "Liquidity Transfer"
 
     # Multiple Approval Attribute
     _approval_from_state = "draft"
