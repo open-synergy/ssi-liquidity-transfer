@@ -19,6 +19,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [ssi_liquidity_transfer](ssi_liquidity_transfer/) | 14.0.1.7.0 |  | Liquidity Transfer
+[ssi_liquidity_transfer_work_log](ssi_liquidity_transfer_work_log/) | 14.0.1.0.0 |  | Liquidity Transfer - Work Log Integration
 
 [//]: # (end addons)
 

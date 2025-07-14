@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo14-addon-ssi_liquidity_transfer',
+        'odoo14-addon-ssi_liquidity_transfer_work_log',
     ],
     classifiers=[
         'Programming Language :: Python',
