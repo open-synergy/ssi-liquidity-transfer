@@ -34,7 +34,7 @@ class LiquidityTransfer(models.Model):
     _automatically_insert_open_policy_fields = False
     _automatically_insert_open_button = False
 
-    _statusbar_visible_label = "draft,confirm,open,done"
+    _statusbar_visible_label = "draft,confirm,open"
     _policy_field_order = [
         "confirm_ok",
         "approve_ok",
@@ -143,24 +143,28 @@ class LiquidityTransfer(models.Model):
     )
     transfer_amount_method = fields.Selection(
         related="type_id.transfer_amount_method",
+        compute_sudo=True,
     )
     allowed_account_ids = fields.Many2many(
         string="Allowed Accounts",
         comodel_name="account.account",
         compute="_compute_allowed_account_ids",
         store=False,
+        compute_sudo=True,
     )
     allowed_journal_ids = fields.Many2many(
         string="Allowed Journals",
         comodel_name="account.journal",
         compute="_compute_allowed_journal_ids",
         store=False,
+        compute_sudo=True,
     )
     allowed_partner_ids = fields.Many2many(
         string="Allowed Partners",
         comodel_name="res.partner",
         compute="_compute_allowed_partner_ids",
         store=False,
+        compute_sudo=True,
     )
     reference_move_line_ids = fields.One2many(
         string="Reference Move Lines",
@@ -177,9 +181,11 @@ class LiquidityTransfer(models.Model):
         string="Reference Amount",
         compute="_compute_aml_amount",
         store=True,
+        compute_sudo=True,
     )
     journal_account_id = fields.Many2one(
         related="journal_id.default_account_id",
+        compute_sudo=True,
     )
     transfer_amount = fields.Monetary(
         string="Amount",
@@ -295,7 +301,7 @@ class LiquidityTransfer(models.Model):
 
     @api.model
     def _get_policy_field(self):
-        res = super(LiquidityTransfer, self)._get_policy_field()
+        res = super()._get_policy_field()
         policy_field = [
             "confirm_ok",
             "approve_ok",
