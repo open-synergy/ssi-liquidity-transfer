@@ -1,0 +1,298 @@
+scenarios:
+  - name: "Liquidity Transfer Type - Create master data"
+    steps:
+      - step: "Setup - get bank account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "account_type_liquidity"
+
+      - step: "Setup - create account for type"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Liquidity Account Type"
+          code: "TEST_LT_TYPE_001"
+          user_type_id: "EVAL: registry['account_type_liquidity'].id"
+
+      - step: "Create liquidity transfer type"
+        action: "create"
+        model: "liquidity_transfer_type"
+        save_as: "lt_type"
+        values:
+          name: "Test LT Type"
+          code: "TLTTYPE001"
+          account_id: "EVAL: registry['account'].id"
+          transfer_amount_method: "free"
+
+      - step: "Assert type created"
+        action: "assert"
+        target: "lt_type"
+        asserts:
+          name:
+            type: "value"
+            expected: "Test LT Type"
+          code:
+            type: "value"
+            expected: "TLTTYPE001"
+          transfer_amount_method:
+            type: "value"
+            expected: "free"
+
+  - name: "Liquidity Transfer - Full Workflow: draft to open"
+    steps:
+      - step: "Setup - get bank account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "account_type"
+
+      - step: "Setup - create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test Liquidity Transfer Account"
+          code: "TEST_LT_001"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "Test LT Bank Journal"
+          code: "TLTBK"
+          type: "bank"
+
+      - step: "Setup - create liquidity transfer type"
+        action: "create"
+        model: "liquidity_transfer_type"
+        save_as: "lt_type"
+        values:
+          name: "Test Workflow LT Type"
+          code: "TWLTTYPE"
+          account_id: "EVAL: registry['account'].id"
+          transfer_amount_method: "free"
+
+      - step: "Create liquidity transfer"
+        action: "create"
+        model: "liquidity_transfer"
+        save_as: "lt"
+        as_user: "base.user_admin"
+        values:
+          type_id: "EVAL: registry['lt_type'].id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          transfer_amount: 1000.0
+          policy_template_id: "ssi_liquidity_transfer.liquidity_transfer_policy_template"
+
+      - step: "Assert LT created in draft"
+        action: "assert"
+        target: "lt"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          transfer_amount:
+            type: "value"
+            operator: "gt"
+            expected: 0.0
+
+      - step: "Confirm LT"
+        action: "call"
+        target: "lt"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache after confirm"
+        action: "call"
+        target: "lt"
+        method: "invalidate_cache"
+
+      - step: "Approve LT"
+        action: "call"
+        target: "lt"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "open"
+
+      - step: "Invalidate cache after approve"
+        action: "call"
+        target: "lt"
+        method: "invalidate_cache"
+
+      - step: "Assert journal entry created"
+        action: "assert"
+        target: "lt"
+        asserts:
+          move_id:
+            type: "value"
+            operator: "is_truthy"
+            expected: null
+
+  - name: "Liquidity Transfer - Cancel and Restart"
+    steps:
+      - step: "Setup - get bank account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "account_type"
+
+      - step: "Setup - create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test LT Cancel Account"
+          code: "TEST_LT_CANCEL_001"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "Test LT Cancel Journal"
+          code: "TLTCNL"
+          type: "bank"
+
+      - step: "Setup - create type"
+        action: "create"
+        model: "liquidity_transfer_type"
+        save_as: "lt_type"
+        values:
+          name: "Test Cancel LT Type"
+          code: "TCLTTYPE"
+          account_id: "EVAL: registry['account'].id"
+          transfer_amount_method: "free"
+
+      - step: "Create liquidity transfer"
+        action: "create"
+        model: "liquidity_transfer"
+        save_as: "lt"
+        as_user: "base.user_admin"
+        values:
+          type_id: "EVAL: registry['lt_type'].id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          transfer_amount: 500.0
+          policy_template_id: "ssi_liquidity_transfer.liquidity_transfer_policy_template"
+
+      - step: "Assert created in draft"
+        action: "assert"
+        target: "lt"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Confirm LT"
+        action: "call"
+        target: "lt"
+        method: "action_confirm"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache"
+        action: "call"
+        target: "lt"
+        method: "invalidate_cache"
+
+      - step: "Cancel LT"
+        action: "call"
+        target: "lt"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        context:
+          bypass_policy_check: true
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Invalidate cache after cancel"
+        action: "call"
+        target: "lt"
+        method: "invalidate_cache"
+
+      - step: "Restart LT"
+        action: "call"
+        target: "lt"
+        method: "action_restart"
+        as_user: "base.user_admin"
+        context:
+          bypass_policy_check: true
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Liquidity Transfer - AML Amount Method"
+    steps:
+      - step: "Setup - get account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "account_type"
+
+      - step: "Setup - create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test LT AML Account"
+          code: "TEST_LT_AML_001"
+          user_type_id: "EVAL: registry['account_type'].id"
+
+      - step: "Setup - create journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "Test LT AML Journal"
+          code: "TLTAML"
+          type: "bank"
+
+      - step: "Setup - create type with aml method"
+        action: "create"
+        model: "liquidity_transfer_type"
+        save_as: "lt_type"
+        values:
+          name: "Test AML LT Type"
+          code: "TAMLT"
+          account_id: "EVAL: registry['account'].id"
+          transfer_amount_method: "aml"
+
+      - step: "Create liquidity transfer with aml method"
+        action: "create"
+        model: "liquidity_transfer"
+        save_as: "lt"
+        as_user: "base.user_admin"
+        values:
+          type_id: "EVAL: registry['lt_type'].id"
+          journal_id: "EVAL: registry['journal'].id"
+          account_id: "EVAL: registry['account'].id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          transfer_amount: 0.0
+          policy_template_id: "ssi_liquidity_transfer.liquidity_transfer_policy_template"
+
+      - step: "Assert aml amount is zero initially"
+        action: "assert"
+        target: "lt"
+        asserts:
+          aml_amount:
+            type: "value"
+            expected: 0.0
+          transfer_amount_method:
+            type: "value"
+            expected: "aml"
