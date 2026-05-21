@@ -11,3 +11,4 @@ odoo14-addon-ssi-res-partner-m2o-configurator-mixin
 odoo14-addon-ssi-m2o-configurator-mixin
 odoo14-addon-ssi-company-currency-mixin
 odoo14-addon-ssi-accounting-entry-mixin
+odoo-yaml-test
