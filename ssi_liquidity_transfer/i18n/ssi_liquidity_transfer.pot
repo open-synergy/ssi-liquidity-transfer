@@ -26,6 +26,7 @@ msgstr ""
 #. module: ssi_liquidity_transfer
 #: model:ir.model.fields,field_description:ssi_liquidity_transfer.field_liquidity_transfer__account_id
 #: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_type_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
 msgid "Account"
 msgstr ""
 
@@ -191,6 +192,11 @@ msgid "Based On Transaction"
 msgstr ""
 
 #. module: ssi_liquidity_transfer
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_type_view_search
+msgid "Based on Journal Items"
+msgstr ""
+
+#. module: ssi_liquidity_transfer
 #: model:ir.model.fields,field_description:ssi_liquidity_transfer.field_liquidity_transfer__approve_ok
 msgid "Can Approve"
 msgstr ""
@@ -321,11 +327,13 @@ msgstr ""
 #. module: ssi_liquidity_transfer
 #: model:ir.model.fields,field_description:ssi_liquidity_transfer.field_liquidity_transfer__custodian_id
 #: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_type_view_form
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
 msgid "Custodian"
 msgstr ""
 
 #. module: ssi_liquidity_transfer
 #: model:ir.model.fields,field_description:ssi_liquidity_transfer.field_liquidity_transfer__date
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
 msgid "Date"
 msgstr ""
 
@@ -395,6 +403,7 @@ msgstr ""
 
 #. module: ssi_liquidity_transfer
 #: model:ir.model.fields.selection,name:ssi_liquidity_transfer.selection__liquidity_transfer_type__transfer_amount_method__free
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_type_view_search
 msgid "Free Amount"
 msgstr ""
 
@@ -439,6 +448,7 @@ msgstr ""
 
 #. module: ssi_liquidity_transfer
 #: model:ir.model.fields,field_description:ssi_liquidity_transfer.field_liquidity_transfer__journal_id
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
 msgid "Journal"
 msgstr ""
 
@@ -767,6 +777,16 @@ msgid ""
 msgstr ""
 
 #. module: ssi_liquidity_transfer
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
+msgid "This Month"
+msgstr ""
+
+#. module: ssi_liquidity_transfer
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
+msgid "Today"
+msgstr ""
+
+#. module: ssi_liquidity_transfer
 #: model:ir.model.fields,help:ssi_liquidity_transfer.field_liquidity_transfer__name
 msgid ""
 "Transaction/document number\n"
@@ -787,6 +807,7 @@ msgstr ""
 
 #. module: ssi_liquidity_transfer
 #: model:ir.model.fields,field_description:ssi_liquidity_transfer.field_liquidity_transfer__type_id
+#: model_terms:ir.ui.view,arch_db:ssi_liquidity_transfer.liquidity_transfer_view_search
 msgid "Type"
 msgstr ""
 
