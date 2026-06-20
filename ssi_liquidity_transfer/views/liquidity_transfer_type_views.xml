@@ -22,7 +22,21 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//group[@name='dom_active']" position="before">
+                <separator name="transfer_amount_method" />
+                <filter
+                        name="dom_free"
+                        string="Free Amount"
+                        domain="[('transfer_amount_method', '=', 'free')]"
+                    />
+                <filter
+                        name="dom_aml"
+                        string="Based on Journal Items"
+                        domain="[('transfer_amount_method', '=', 'aml')]"
+                    />
+            </xpath>
+        </data>
     </field>
 </record>
 

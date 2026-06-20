@@ -34,7 +34,50 @@
         />
     <field name="mode">primary</field>
     <field name="arch" type="xml">
-        <data />
+        <data>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="type_id" />
+                <field name="journal_id" />
+                <field name="account_id" />
+                <field name="custodian_id" />
+            </xpath>
+            <xpath expr="//separator[@name='activity']" position="before">
+                <separator name="date" />
+                <filter
+                        name="dom_today"
+                        string="Today"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"
+                    />
+                <filter
+                        name="dom_this_month"
+                        string="This Month"
+                        domain="[('date', '&gt;=', (context_today()).strftime('%Y-%m-01')), ('date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"
+                    />
+            </xpath>
+            <xpath expr="//group[@name='group_by']" position="inside">
+                <filter
+                        name="grp_type"
+                        string="Type"
+                        context="{'group_by': 'type_id'}"
+                    />
+                <filter
+                        name="grp_journal"
+                        string="Journal"
+                        context="{'group_by': 'journal_id'}"
+                    />
+                <filter
+                        name="grp_account"
+                        string="Account"
+                        context="{'group_by': 'account_id'}"
+                    />
+                <filter
+                        name="grp_custodian"
+                        string="Custodian"
+                        context="{'group_by': 'custodian_id'}"
+                    />
+                <filter name="grp_date" string="Date" context="{'group_by': 'date'}" />
+            </xpath>
+        </data>
     </field>
 </record>
 
