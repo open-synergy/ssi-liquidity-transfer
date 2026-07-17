@@ -20,6 +20,7 @@ addon | version | maintainers | summary
 --- | --- | --- | ---
 [ssi_liquidity_transfer](ssi_liquidity_transfer/) | 14.0.1.10.0 |  | Liquidity Transfer
 [ssi_liquidity_transfer_documenso_signing](ssi_liquidity_transfer_documenso_signing/) | 14.0.1.0.0 |  | Liquidity Transfer - Documenso Signing Integration
+[ssi_liquidity_transfer_operating_unit](ssi_liquidity_transfer_operating_unit/) | 14.0.1.0.0 |  | Liquidity Transfer + Operating Unit
 [ssi_liquidity_transfer_work_log](ssi_liquidity_transfer_work_log/) | 14.0.1.0.0 |  | Liquidity Transfer - Work Log Integration
 
 [//]: # (end addons)
