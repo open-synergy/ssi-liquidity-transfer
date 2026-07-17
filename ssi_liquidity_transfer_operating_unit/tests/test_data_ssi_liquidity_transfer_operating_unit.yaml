@@ -1,0 +1,142 @@
+scenarios:
+  - name: "Liquidity Transfer - Operating Unit propagation"
+    steps:
+      - step: "Setup - get bank account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "account_type"
+
+      - step: "Setup - create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test LT OU Account"
+          code: "TEST_LT_OU_001"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "Test LT OU Journal"
+          code: "TLTOU1"
+          type: "bank"
+
+      - step: "Setup - create liquidity transfer type"
+        action: "create"
+        model: "liquidity_transfer_type"
+        save_as: "lt_type"
+        values:
+          name: "Test LT OU Type"
+          code: "TLTOUTYPE1"
+          account_id: "REC: account.id"
+          transfer_amount_method: "free"
+
+      - step: "Create liquidity_transfer with operating_unit_id"
+        action: "create"
+        model: "liquidity_transfer"
+        save_as: "lt"
+        as_user: "base.user_admin"
+        values:
+          type_id: "REC: lt_type.id"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          transfer_amount: 1000.0
+          policy_template_id: "ssi_liquidity_transfer.liquidity_transfer_policy_template"
+          operating_unit_id: "REF: operating_unit.main_operating_unit"
+
+      - step: "Assert liquidity_transfer operating_unit_id is set"
+        action: "assert"
+        target: "lt"
+        asserts:
+          operating_unit_id:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Liquidity Transfer - ir.rule restricts access by operating unit"
+    steps:
+      - step: "Setup - get bank account type"
+        action: "ref"
+        xml_id: "account.data_account_type_liquidity"
+        save_as: "account_type"
+
+      - step: "Setup - create account"
+        action: "create"
+        model: "account.account"
+        save_as: "account"
+        values:
+          name: "Test LT OU Rule Account"
+          code: "TEST_LT_OU_002"
+          user_type_id: "REC: account_type.id"
+
+      - step: "Setup - create journal"
+        action: "create"
+        model: "account.journal"
+        save_as: "journal"
+        values:
+          name: "Test LT OU Rule Journal"
+          code: "TLTOU2"
+          type: "bank"
+
+      - step: "Setup - create liquidity transfer type"
+        action: "create"
+        model: "liquidity_transfer_type"
+        save_as: "lt_type"
+        values:
+          name: "Test LT OU Rule Type"
+          code: "TLTOUTYPE2"
+          account_id: "REC: account.id"
+          transfer_amount_method: "free"
+
+      - step: "Create liquidity_transfer with main operating unit"
+        action: "create"
+        model: "liquidity_transfer"
+        save_as: "lt"
+        as_user: "base.user_admin"
+        values:
+          type_id: "REC: lt_type.id"
+          journal_id: "REC: journal.id"
+          account_id: "REC: account.id"
+          currency_id: "EVAL: env.company.currency_id.id"
+          transfer_amount: 1000.0
+          policy_template_id: "ssi_liquidity_transfer.liquidity_transfer_policy_template"
+          operating_unit_id: "REF: operating_unit.main_operating_unit"
+
+      - step: "Create user restricted to a different operating unit"
+        action: "create"
+        model: "res.users"
+        save_as: "restricted_user"
+        values:
+          name: "Restricted Liquidity Transfer OU User"
+          login: "restricted_liquidity_transfer_ou_user@example.com"
+          groups_id:
+            - - 6
+              - 0
+              - - "REF: base.group_user"
+                - "REF: ssi_liquidity_transfer.liquidity_transfer_user_group"
+                - "REF:
+                  ssi_liquidity_transfer_operating_unit.liquidity_transfer_ou_group"
+          assigned_operating_unit_ids:
+            - - 6
+              - 0
+              - - "REF: operating_unit.b2b_operating_unit"
+
+      - step: "Restricted user cannot see the record"
+        action: "search"
+        model: "liquidity_transfer"
+        domain: [["id", "=", "REC: lt.id"]]
+        save_as: "search_result"
+        as_user: "restricted_user"
+        expect_count: 0
+
+      - step: "Restricted user cannot write the record"
+        action: "write"
+        target: "lt"
+        as_user: "restricted_user"
+        expect_error:
+          type: "AccessError"
+        values:
+          transfer_amount: 2000.0
